@@ -53,7 +53,7 @@ client.on("message", (msg) => {
 
 //daily-appreciation-el-wiwi
 function dailyMessage(){
-    const channel = client.channels.cache.find(channel => channel.name === "test-channel")
+    const channel = client.channels.cache.find(channel => channel.name === "daily-appreciation-el-wiwi")
 
     if(channel){
         const quote = getQuote();
