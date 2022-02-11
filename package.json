@@ -10,9 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/builders": "^0.12.0",
     "cron": "^1.8.2",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
+    "fs": "^0.0.1-security",
     "generate-quote": "^1.0.6",
     "get-random-quote": "^1.1.3"
   }
