@@ -1,0 +1,18 @@
+{
+  "name": "elwiwi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/bot.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "generate-quote": "^1.0.6",
+    "get-random-quote": "^1.1.3"
+  }
+}
