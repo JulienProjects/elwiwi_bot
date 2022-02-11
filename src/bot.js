@@ -5,7 +5,7 @@ import { getQuote } from "generate-quote";
 import { Client, Intents, Collection } from 'discord.js';
 import  fs  from "fs"
 
-import { CronJob } from 'cron';
+import schedule from 'node-schedule';
 
 const prefix = '-e';
 
@@ -29,10 +29,13 @@ client.on("ready", () => {
 })
 
 client.on("message", (msg) => {
+    if(msg.author.bot){
+        return;
+    }
     if(msg.content === "<:elwiwiright:915250236555923578>"){
         msg.reply("Yes Praise me <:elwiwiright:915250236555923578>");
     }else{
-        if(!msg.content.startsWith(prefix) || msg.author.bot) {
+        if(!msg.content.startsWith(prefix)) {
             return;
         }
       
@@ -50,7 +53,7 @@ client.on("message", (msg) => {
 
 //daily-appreciation-el-wiwi
 function dailyMessage(){
-    const channel = client.channels.cache.find(channel => channel.name === "daily-appreciation-el-wiwi")
+    const channel = client.channels.cache.find(channel => channel.name === "test-channel")
 
     if(channel){
         const quote = getQuote();
@@ -59,12 +62,11 @@ function dailyMessage(){
     }
 }
 
-var job = new CronJob('* * */12 * * *', function() {
+ schedule.scheduleJob('* * */12 * * *', function() {
    dailyMessage();
-  }, null, true, 'America/Los_Angeles');
+  });
 
 
 
 client.login(process.env.BOT_TOKEN_ELWIWI);
 
-job.start();
