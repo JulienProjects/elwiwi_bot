@@ -5,8 +5,6 @@ import { getQuote } from "generate-quote";
 import { Client, Intents, Collection } from 'discord.js';
 import  fs  from "fs"
 
-import schedule from 'node-schedule';
-
 const prefix = '-e';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -22,7 +20,6 @@ for (const file of commandFiles) {
 	// With the key as the command name and the value as the exported module
 	client.commands.set(command.default.data.name, command.default);
 }
-
 
 client.on("ready", () => {
     console.log("Ready!", client.user.tag);
@@ -52,21 +49,15 @@ client.on("message", (msg) => {
 
 
 //daily-appreciation-el-wiwi
-function dailyMessage(){
-    const channel = client.channels.cache.find(channel => channel.name === "daily-appreciation-el-wiwi")
+// function dailyMessage(){
+//     const channel = client.channels.cache.find(channel => channel.name === "daily-appreciation-el-wiwi")
 
-    if(channel){
-        const quote = getQuote();
-        console.log(quote);
-        channel.send(quote.text + " - el wiwi");
-    }
-}
-
- schedule.scheduleJob('* * */12 * * *', function() {
-   dailyMessage();
-  });
-
-
+//     if(channel){
+//         const quote = getQuote();
+//         console.log(quote);
+//         channel.send(quote.text + " - el wiwi");
+//     }
+// }
 
 client.login(process.env.BOT_TOKEN_ELWIWI);
 
