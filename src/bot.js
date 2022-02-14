@@ -23,6 +23,7 @@ for (const file of commandFiles) {
 
 client.on("ready", () => {
     console.log("Ready!", client.user.tag);
+    client.user.setActivity("type -ehelp for help"); 
 })
 
 client.on("message", (msg) => {
@@ -58,6 +59,8 @@ client.on("message", (msg) => {
 //         channel.send(quote.text + " - el wiwi");
 //     }
 // }
+
+
 
 client.login(process.env.BOT_TOKEN_ELWIWI);
 
