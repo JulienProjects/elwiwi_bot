@@ -1,18 +1,30 @@
-import XMLHttpRequest from 'xhr2';
+import pg from 'pg'
+const { Pool } = pg
+
+import dotenv from 'dotenv'
+dotenv.config()
+
+const client = new Pool({
+    user: process.env.PGUSER,
+    host:  process.env.HOST,
+    database:  process.env.PGDATABASE,
+    password:  process.env.PGPASSWORD,
+    port:  process.env.PGPORT
+  })
 
 export default {
     getUser: function(userId){
-        let ajax = new XMLHttpRequest();
-         ajax.open("GET", `./database/getUser.php?userId=${userId}`, true)
-
-         ajax.send();
+        console.log("getUser", userId);
+        const text = 'SELECT FROM e_users WHERE name = $1'
+        const values = [userId]
+        client.query(text, values, (err, res) => {
+            if (err) {
+              console.log(err.stack)
+            } else {
+              console.log(res.rows[0])
         
-        ajax.onreadystatechange = function(){
-            if(this.readyState = 4 && this.status === 200){
-                console.log(response);
-                return this.response;
             }
-        }
+          })
     },
     createNewUser: function(userId, date){
         let ajax = new XMLHttpRequest();
