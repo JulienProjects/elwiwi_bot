@@ -35,11 +35,11 @@ export default {
         })
         
     },
-    createNewUser: function(userId, date){
+    createNewUser: function(userId, userName, date){
         return new Promise((resolve) => {
             console.log("createNewUser", userId);
-            const text = 'INSERT INTO e_users (name, last_praise, streak) values ($1, $2, 1)'
-            const values = [userId, date]
+            const text = 'INSERT INTO e_users (name, userName, last_praise, streak) values ($1, $2, $3, 1)'
+            const values = [userId, userName, date]
             client.query(text, values, (err, res) => {
                 if (err) {
                   console.log(err.stack)

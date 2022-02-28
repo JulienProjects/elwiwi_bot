@@ -32,13 +32,14 @@ client.on("message", (msg) => {
         return;
     }
     if(msg.content === "<:elwiwiright:915250236555923578>" && msg.channelId === '865990341932220456'){
-        const userId = msg.author.id; 
+        const userId = msg.author.id;
+        const userName =  msg.author.username
         //console.log(msg);
         database.getUser(userId).then((user) => {
             if(!user){
                 const date = new Date().toString();
                 //user existietr noch nicht
-                database.createNewUser(userId, date).then((data) => {
+                database.createNewUser(userId, userName, date).then((data) => {
                     console.log(data);
                 })
             }else{
