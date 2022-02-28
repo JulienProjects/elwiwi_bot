@@ -46,7 +46,7 @@ client.on("message", (msg) => {
 
     console.log(messageString.length)
 
-    if(messageString.length === 0 && msg.channelId === praiseChannelId){
+    if((messageString.length === 0 || messageString.length === 1) && msg.channelId === praiseChannelId){
         const userId = msg.author.id;
         const userName =  msg.author.username
         //console.log(msg);
