@@ -7,12 +7,12 @@ import  fs  from "fs"
 import database from "../databaseHandler.js"
 
 const prefix = '-e';
-
+const elwiwiCode = "<:elwiwi:865180324942184479>";
+const elwiwiRightCode = "<:elwiwiright:915250236555923578>"
+const praiseChannelId = '865990341932220456';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
 //commands anwenden
 client.commands = new Collection();
-
 const commandFiles = fs.readdirSync('./src/commands/').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
@@ -34,19 +34,19 @@ client.on("message", (msg) => {
     //console.log(msg);
     let messageString = msg.content.trim();
     console.log(messageString);
-    while(messageString.indexOf('<:elwiwi:865180324942184479>') > -1 || messageString.indexOf('<:elwiwiright:915250236555923578>') > -1){
-        if(messageString.indexOf('<:elwiwi:865180324942184479>') > -1){
-            const idx = messageString.indexOf('<:elwiwi:865180324942184479>');
-            messageString = messageString.substring(0, idx) + messageString.substring(idx + '<:elwiwi:865180324942184479>'.length, messageString.length);
+    while(messageString.indexOf(elwiwiCode) > -1 || messageString.indexOf(elwiwiRightCode) > -1){
+        if(messageString.indexOf(elwiwiCode) > -1){
+            const idx = messageString.indexOf(elwiwiCode);
+            messageString = messageString.substring(0, idx) + messageString.substring(idx + elwiwiCode.length, messageString.length);
         }else {
-            const idx = messageString.indexOf('<:elwiwiright:915250236555923578>');
-            messageString = messageString.substring(0, idx) + messageString.substring(idx + '<:elwiwiright:915250236555923578>'.length, messageString.length);
+            const idx = messageString.indexOf(elwiwiRightCode);
+            messageString = messageString.substring(0, idx) + messageString.substring(idx + elwiwiRightCode.length, messageString.length);
         }; 
     }
 
     console.log(messageString.length)
 
-    if(messageString.length === 0 && msg.channelId === '865990341932220456'){
+    if(messageString.length === 0 && msg.channelId === praiseChannelId){
         const userId = msg.author.id;
         const userName =  msg.author.username
         //console.log(msg);
