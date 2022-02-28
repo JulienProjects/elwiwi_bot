@@ -4,6 +4,7 @@ dotenv.config()
 import { getQuote } from "generate-quote";
 import { Client, Intents, Collection } from 'discord.js';
 import  fs  from "fs"
+import database from "../databaseHandler.js"
 
 const prefix = '-e';
 
@@ -32,6 +33,9 @@ client.on("message", (msg) => {
     }
     if(msg.content === "<:elwiwiright:915250236555923578>"){
         msg.reply("Yes Praise me <:elwiwiright:915250236555923578>");
+    } else if(msg.content === "TEST1"){
+        //console.log(msg);
+        database.getUser(msg.author.id);
     }else{
         if(!msg.content.startsWith(prefix)) {
             return;
