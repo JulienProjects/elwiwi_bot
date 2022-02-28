@@ -31,7 +31,7 @@ client.on("message", (msg) => {
     if(msg.author.bot){
         return;
     }
-    if(msg.content === "<:elwiwiright:915250236555923578>"){
+    if(msg.content === "<:elwiwiright:915250236555923578>" && msg.channelId === '865990341932220456'){
         const userId = msg.author.id; 
         //console.log(msg);
         database.getUser(userId).then((user) => {
@@ -58,7 +58,7 @@ client.on("message", (msg) => {
                         console.log("neuer praise", user.streak)
                         //Immer nur ein Tag
                         database.setUserData(userId,new Date().toString(), user.streak + 1)
-                        if((user.streak + 1) % 10 === 0){
+                        if((user.streak + 1) % 5 === 0){
                             msg.reply(`Current streak: ${user.streak + 1}. el wiwi is proud`);
                         }
                     }
