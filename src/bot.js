@@ -32,8 +32,6 @@ client.on("message", (msg) => {
         return;
     }
     if(msg.content === "<:elwiwiright:915250236555923578>"){
-        msg.reply("Yes Praise me <:elwiwiright:915250236555923578>");
-    } else if(msg.content === "TEST1"){
         const userId = msg.author.id; 
         //console.log(msg);
         database.getUser(userId).then((user) => {
@@ -67,7 +65,7 @@ client.on("message", (msg) => {
                 }
             }
         });
-    }else{
+    } else{
         if(!msg.content.startsWith(prefix)) {
             return;
         }
