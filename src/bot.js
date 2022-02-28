@@ -31,7 +31,22 @@ client.on("message", (msg) => {
     if(msg.author.bot){
         return;
     }
-    if(msg.content === "<:elwiwiright:915250236555923578>" && msg.channelId === '865990341932220456'){
+    //console.log(msg);
+    let messageString = msg.content.trim();
+    console.log(messageString);
+    while(messageString.indexOf('<:elwiwi:865180324942184479>') > -1 || messageString.indexOf('<:elwiwiright:915250236555923578>') > -1){
+        if(messageString.indexOf('<:elwiwi:865180324942184479>') > -1){
+            const idx = messageString.indexOf('<:elwiwi:865180324942184479>');
+            messageString = messageString.substring(0, idx) + messageString.substring(idx + '<:elwiwi:865180324942184479>'.length, messageString.length);
+        }else {
+            const idx = messageString.indexOf('<:elwiwiright:915250236555923578>');
+            messageString = messageString.substring(0, idx) + messageString.substring(idx + '<:elwiwiright:915250236555923578>'.length, messageString.length);
+        }; 
+    }
+
+    console.log(messageString.length)
+
+    if(messageString.length === 0 && msg.channelId === '865990341932220456'){
         const userId = msg.author.id;
         const userName =  msg.author.username
         //console.log(msg);
