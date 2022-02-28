@@ -34,8 +34,39 @@ client.on("message", (msg) => {
     if(msg.content === "<:elwiwiright:915250236555923578>"){
         msg.reply("Yes Praise me <:elwiwiright:915250236555923578>");
     } else if(msg.content === "TEST1"){
+        const userId = msg.author.id; 
         //console.log(msg);
-        database.getUser(msg.author.id);
+        database.getUser(userId).then((user) => {
+            if(!user){
+                const date = new Date().toString();
+                //user existietr noch nicht
+                database.createNewUser(userId, date).then((data) => {
+                    console.log(data);
+                })
+            }else{
+                const twentyFourHrInMs = 24 * 60 * 60 * 1000;
+                const twentyFourHoursAgo = Date.now() - twentyFourHrInMs;
+                const last_praiseDate = new Date(user.last_praise)
+
+                if(last_praiseDate < twentyFourHoursAgo){
+                    //älter als 24 === streak vorbei
+                    console.log("älter als 24")
+                    database.setUserData(userId,new Date().toString(), 1)
+                }else{
+                    var today = new Date();
+                    const isToday = last_praiseDate.getDate() === today.getDate() && last_praiseDate.getMonth() === today.getMonth() && last_praiseDate.getFullYear() === today.getFullYear();
+
+                    if(!isToday) {
+                        console.log("neuer praise", user.streak)
+                        //Immer nur ein Tag
+                        database.setUserData(userId,new Date().toString(), user.streak + 1)
+                        if((user.streak + 1) % 10 === 0){
+                            msg.reply(`Current streak: ${user.streak + 1}. el wiwi is proud`);
+                        }
+                    }
+                }
+            }
+        });
     }else{
         if(!msg.content.startsWith(prefix)) {
             return;
