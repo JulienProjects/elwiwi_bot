@@ -60,7 +60,7 @@ client.on("message", (msg) => {
                         //Immer nur ein Tag
                         database.setUserData(userId,new Date().toString(), user.streak + 1)
                         if((user.streak + 1) % 5 === 0){
-                            msg.reply(`Current streak: ${user.streak + 1}. el wiwi is proud`);
+                            msg.channel.send(`${userName} is on day ${user.streak + 1} praising el wiwi`);
                         }
                     }
                 }
