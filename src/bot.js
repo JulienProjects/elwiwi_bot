@@ -46,7 +46,7 @@ client.on("message", (msg) => {
 
     console.log(messageString.length)
 
-    if((messageString.length === 0 || messageString.length === 1) && msg.channelId === praiseChannelId){
+    if(msg.content === "TEST1"){
         const userId = msg.author.id;
         const userName =  msg.author.username
         //console.log(msg);
@@ -57,26 +57,27 @@ client.on("message", (msg) => {
                 database.createNewUser(userId, userName, date).then((data) => {
                     console.log(data);
                 })
-            }else{
-                const twentyFourHrInMs = 24 * 60 * 60 * 1000;
-                const twentyFourHoursAgo = Date.now() - twentyFourHrInMs;
-                const last_praiseDate = new Date(user.last_praise)
+            }else{   
+                const last_praiseDate = new Date(user.last_praise)                     
+                var today = new Date();   
+                
+                const isToday = last_praiseDate.getDate() === today.getDate() && last_praiseDate.getMonth() === today.getMonth() && last_praiseDate.getFullYear() === today.getFullYear();
 
-                if(last_praiseDate < twentyFourHoursAgo){
-                    //älter als 24 === streak vorbei
-                    console.log("älter als 24")
-                    database.setUserData(userId,new Date().toString(), 1)
-                }else{
-                    var today = new Date();
-                    const isToday = last_praiseDate.getDate() === today.getDate() && last_praiseDate.getMonth() === today.getMonth() && last_praiseDate.getFullYear() === today.getFullYear();
-
-                    if(!isToday) {
+                //neuer Tag
+                if(!isToday){
+                    today.setDate(today.getDate() -1);
+                    console.log(today.getDate(), last_praiseDate.getDate());
+                    if(today.getDate() === last_praiseDate.getDate()) {
+                        //Den nächsten kompletten Tag zeit
                         console.log("neuer praise", user.streak)
-                        //Immer nur ein Tag
                         database.setUserData(userId,new Date().toString(), user.streak + 1)
                         if((user.streak + 1) % 5 === 0){
                             msg.channel.send(`${userName} is on day ${user.streak + 1} praising el wiwi`);
                         }
+                    }else {
+                        //älter als 24 === streak vorbei
+                        console.log("älter als 24")
+                        database.setUserData(userId,new Date().toString(), 1)
                     }
                 }
             }
