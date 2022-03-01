@@ -24,7 +24,7 @@ for (const file of commandFiles) {
 
 client.on("ready", () => {
     console.log("Ready!", client.user.tag);
-    client.user.setActivity("type -ehelp for help | Source Code: github.com/JulienProjects/elwiwi_bot"); 
+    client.user.setActivity("type -ehelp for help"); 
 })
 
 client.on("message", (msg) => {
