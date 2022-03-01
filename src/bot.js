@@ -33,7 +33,6 @@ client.on("message", (msg) => {
     }
     //console.log(msg);
     let messageString = msg.content.trim();
-    console.log(messageString);
     while(messageString.indexOf(elwiwiCode) > -1 || messageString.indexOf(elwiwiRightCode) > -1){
         if(messageString.indexOf(elwiwiCode) > -1){
             const idx = messageString.indexOf(elwiwiCode);
@@ -44,9 +43,7 @@ client.on("message", (msg) => {
         }; 
     }
 
-    console.log(messageString.length)
-
-    if(msg.content === "TEST1"){
+    if((messageString.length === 0 || messageString.length === 1) && msg.channelId === praiseChannelId){
         const userId = msg.author.id;
         const userName =  msg.author.username
         //console.log(msg);
@@ -55,7 +52,7 @@ client.on("message", (msg) => {
                 const date = new Date().toString();
                 //user existietr noch nicht
                 database.createNewUser(userId, userName, date).then((data) => {
-                    console.log(data);
+                    console.log(data, userName);
                 })
             }else{   
                 const last_praiseDate = new Date(user.last_praise)                     
@@ -66,17 +63,16 @@ client.on("message", (msg) => {
                 //neuer Tag
                 if(!isToday){
                     today.setDate(today.getDate() -1);
-                    console.log(today.getDate(), last_praiseDate.getDate());
                     if(today.getDate() === last_praiseDate.getDate()) {
                         //Den nächsten kompletten Tag zeit
-                        console.log("neuer praise", user.streak)
+                        console.log("neuer praise (still old streak)", user.streak)
                         database.setUserData(userId,new Date().toString(), user.streak + 1)
                         if((user.streak + 1) % 5 === 0){
                             msg.channel.send(`${userName} is on day ${user.streak + 1} praising el wiwi`);
                         }
                     }else {
                         //älter als 24 === streak vorbei
-                        console.log("älter als 24")
+                        console.log("älter als 24", userName)
                         database.setUserData(userId,new Date().toString(), 1)
                     }
                 }
