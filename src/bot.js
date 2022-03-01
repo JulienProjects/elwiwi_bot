@@ -53,6 +53,7 @@ client.on("message", (msg) => {
                 //user existietr noch nicht
                 database.createNewUser(userId, userName, date).then((data) => {
                     console.log(data, userName);
+                    msg.channel.send(`${userName} started daily el wiwi praising`);
                 })
             }else{   
                 const last_praiseDate = new Date(user.last_praise)                     
