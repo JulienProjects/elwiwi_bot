@@ -75,6 +75,7 @@ client.on("message", (msg) => {
                         //älter als 24 === streak vorbei
                         console.log("älter als 24", userName)
                         database.setUserData(userId,new Date().toString(), 1)
+                        msg.reply(`You forgot to praise el wiwi, your streak is back to 1 ....sinner. You had a ${user.streak}-day Streak`);
                     }
                 }
             }

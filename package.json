@@ -8,7 +8,7 @@
     "start": "node ./src/bot.js",
     "server": "node server.js"
   },
-  "author": "",
+  "author": "JulienProjects",
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
