@@ -18,6 +18,19 @@ const client = new Client({
   client.connect()
 
 export default {
+      getAll:function(userId){
+        return new Promise((resolve) => {
+            console.log("getAll");
+            const text = 'SELECT * FROM e_users'
+            client.query(text, [], (err, res) => {
+                if (err) {
+                  console.log(err.stack)
+                } else {
+                  resolve(res.rows);
+                }
+              })
+        })
+    },
     getUser: function(userId){
         return new Promise((resolve) => {
             
