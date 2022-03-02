@@ -14,7 +14,7 @@ export default {
                 var today = new Date();   
                 
                 const isToday = last_praiseDate.getDate() === today.getDate() && last_praiseDate.getMonth() === today.getMonth() && last_praiseDate.getFullYear() === today.getFullYear();
-                const praisesToday = isToday ? "You did your Praise Today" : "You still need to Praise for Today";
+                const praisesToday = isToday ? "You have praised el wiwi today" : "You have not praised el wiwi today";
                 interaction.author.send(`Your on streak ${data.streak} goob job. ${praisesToday}`);
             }
         })
