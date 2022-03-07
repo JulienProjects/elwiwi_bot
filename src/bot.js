@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-import { getQuote } from "generate-quote";
 import { Client, Intents, Collection } from 'discord.js';
 import  fs  from "fs"
 import database from "../databaseHandler.js"
@@ -11,6 +10,7 @@ const elwiwiCode = "<:elwiwi:865180324942184479>";
 const elwiwiRightCode = "<:elwiwiright:915250236555923578>"
 const praiseChannelId = '865990341932220456';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
 //commands anwenden
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./src/commands/').filter(file => file.endsWith('.js'));
@@ -48,6 +48,7 @@ client.on("message", (msg) => {
         const userName =  msg.author.username
         //console.log(msg);
         database.getUser(userId).then((user) => {
+            msg.react(elwiwiRightCode);
             if(!user){
                 const date = new Date().toString();
                 //user existietr noch nicht
@@ -95,19 +96,6 @@ client.on("message", (msg) => {
         })
     }
 })
-
-
-//daily-appreciation-el-wiwi
-// function dailyMessage(){
-//     const channel = client.channels.cache.find(channel => channel.name === "daily-appreciation-el-wiwi")
-
-//     if(channel){
-//         const quote = getQuote();
-//         console.log(quote);
-//         channel.send(quote.text + " - el wiwi");
-//     }
-// }
-
 
 
 client.login(process.env.BOT_TOKEN_ELWIWI);
