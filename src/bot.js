@@ -42,8 +42,10 @@ client.on("message", (msg) => {
             messageString = messageString.substring(0, idx) + messageString.substring(idx + elwiwiRightCode.length, messageString.length);
         }; 
     }
+    messageString = messageString.trim();
+    console.log(messageString.length);
 
-    if((messageString.length === 0 || messageString.length === 1) && msg.channelId === praiseChannelId){
+    if(messageString.length === 0 && msg.channelId === praiseChannelId){
         const userId = msg.author.id;
         const userName =  msg.author.username
         //console.log(msg);
