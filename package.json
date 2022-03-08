@@ -8,6 +8,9 @@
     "start": "node ./src/bot.js",
     "server": "node server.js"
   },
+  "engines": {
+    "node": "16.14.x"
+  },
   "author": "JulienProjects",
   "license": "ISC",
   "dependencies": {
