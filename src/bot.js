@@ -43,7 +43,6 @@ client.on("message", (msg) => {
         }; 
     }
     messageString = messageString.trim();
-    console.log(messageString.length);
 
     if(messageString.length === 0 && msg.channelId === praiseChannelId){
         const userId = msg.author.id;
