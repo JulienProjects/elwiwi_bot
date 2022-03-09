@@ -3,7 +3,7 @@ dotenv.config()
 
 import { Client, Intents, Collection } from 'discord.js';
 import  fs  from "fs"
-import database from "../databaseHandler.js"
+import database from "./databaseHandler.js"
 
 const prefix = '-e';
 const elwiwiCode = "<:elwiwi:865180324942184479>";

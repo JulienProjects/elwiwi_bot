@@ -1,7 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import  fs  from "fs"
-import dotenv from 'dotenv'
-dotenv.config()
 
 export default {
 	data: new SlashCommandBuilder()

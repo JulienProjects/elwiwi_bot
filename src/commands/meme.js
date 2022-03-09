@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Message, MessageAttachment } from 'discord.js';
 
 export default {
 	data: new SlashCommandBuilder()

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import database from "../../databaseHandler.js"
+import database from "../databaseHandler.js"
 
 export default {
 	data: new SlashCommandBuilder()
