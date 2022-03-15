@@ -17,10 +17,10 @@ const pool = new Pool({
 
 
 export default {
-      getTopFive:function(){
+      getTopTen:function(){
         return new Promise((resolve) => {
-          console.log("getTopFive");
-          const text = 'SELECT * FROM e_users ORDER BY streak DESC LIMIT 5'
+          console.log("getTopTen");
+          const text = 'SELECT * FROM e_users ORDER BY streak DESC LIMIT 10'
           pool.connect((err, client, done) => {
             if (err) throw err
             client.query(text, [], (err, res) => {
