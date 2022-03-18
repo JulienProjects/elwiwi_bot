@@ -134,6 +134,7 @@ class FourWins {
                             me.msg.delete();
                             startMessage.delete();
                             me.channel.send(`Its a draw between ${me.currentPlayer} and ${player === "playerOne" ? me.playerTwo : me.playerOne}`)
+                            me.client.removeListener("messageReactionAdd", me.reactionListener)
                         } else {
                             me.msg = await me.msg.fetch();
                             me.msg.reactions.resolve(reaction.emoji.name).users.remove(me.interaction.author)
