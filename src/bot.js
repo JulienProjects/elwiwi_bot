@@ -9,7 +9,12 @@ const prefix = '-e';
 const elwiwiCode = "<:elwiwi:865180324942184479>";
 const elwiwiRightCode = "<:elwiwiright:915250236555923578>"
 const praiseChannelId = '865990341932220456';
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client(
+    { 
+        intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS], 
+        partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+    }
+);
 
 //commands anwenden
 client.commands = new Collection();
@@ -95,7 +100,7 @@ client.on("message", (msg) => {
         console.log(command);
         commandFiles.forEach((file) => {
             if(file.substring(0, file.length - 3) === command){
-                client.commands.get(command).execute(msg, args);
+                client.commands.get(command).execute(msg, args, client);
             }
         })
     }
