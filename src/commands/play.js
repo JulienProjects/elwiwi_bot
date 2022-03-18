@@ -1,26 +1,24 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import  fs  from "fs"
 
 export default {
 	data: new SlashCommandBuilder()
 		.setName('play')
-		.setDescription('play a game'),
+		.setDescription('play a game, available games: -egames'),
 	async execute(interaction, args, client) {
-        if(args.length === 0){
-            interaction.reply("first parameter missing");
-        }else{
-           const game = args[0];
-           if(!game){
-            interaction.reply("first Parameter missing");
+        const game = args[0];
+        if(!game){
+            interaction.reply("First Parameter missing (should be a Game Name, see -egames) ");
             return;
-           }
-           
-           const gameFile = await import(`../games/${game}.js`);
-           if(!gameFile){
-            interaction.reply("game not found");
-            return;
-           }
-            
-           gameFile.default.startGame(interaction, args, client);
         }
-	},
+
+        if (!fs.existsSync(`./src/games/${game}.js`)) {
+            //check if game exists
+            interaction.reply("Game not found (see -egames)");
+            return;
+          }
+        const gameFile = await import(`../games/${game}.js`);
+    
+        gameFile.default.startGame(interaction, args, client);
+	}
 };

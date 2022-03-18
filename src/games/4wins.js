@@ -15,7 +15,7 @@ const pressIcon = ["0️⃣","1️⃣", "2️⃣","3️⃣","4️⃣","5️⃣",
 class FourWins {
     constructor(interaction, args, client) {
         if(!args[1]){
-            interaction.reply("Missing opponent Name")
+            interaction.reply("Missing Opponent Name (should be second Parameter)")
             return;
         }
         //check if user is tagged
@@ -401,5 +401,6 @@ function fourwins(interaction, args, client){
 
 
 export default {
-    startGame: fourwins
+    startGame: fourwins,
+    desc: `Start a 4win Game. Second Parameter should be Opponent Name`
 }
