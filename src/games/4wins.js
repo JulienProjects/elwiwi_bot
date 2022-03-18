@@ -40,7 +40,6 @@ class FourWins {
         this.playerTwo = args[1];
 
         this.playerTwoObject = client.users.cache.find(user => {return (user.username == this.playerTwo || user.id === this.playerTwo )});
-        console.log(this.playerTwoObject);
         this.playerTwo = this.playerTwoObject.username
         this.channel = null
         const randomNumber = Math.floor(Math.random() * 2); 
