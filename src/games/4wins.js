@@ -180,6 +180,7 @@ class FourWins {
         let sameColumn = {};
         let wonFields = [];
 
+        //TODO: make this better (dirty af)
         if (playerFields.length > 3) {
             for (let i = 0; i < playerFields.length; i++) {
                 let numberInOrder = [];
