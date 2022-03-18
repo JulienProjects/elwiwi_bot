@@ -82,10 +82,11 @@ class FourWins {
                 if((acceptIcon === reaction.emoji.name ||  declineIcon === reaction.emoji.name) && user.username === this.playerTwo){
                     if(acceptIcon === reaction.emoji.name){
                         startMessage.delete();
-                        me.client.removeListener("messageReactionAdd", me.reactionListener)
+                        me.client.removeListener("messageReactionAdd", me.reactionListener);
                        this.init(true);
                     }else{
                         this.channel.send(`${this.playerTwo} did not accept the game`);
+                        me.client.removeListener("messageReactionAdd", me.reactionListener);
                         startMessage.delete();
                     }
                 }
