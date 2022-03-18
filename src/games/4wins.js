@@ -10,23 +10,23 @@ const winIcon = ":x:"
 const acceptIcon = "1️⃣"
 const declineIcon = "0️⃣"
 
-const pressIcon = ["0️⃣","1️⃣", "2️⃣","3️⃣","4️⃣","5️⃣","6️⃣"]
+const pressIcon = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣"]
 
 class FourWins {
     constructor(interaction, args, client) {
-        if(!args[1]){
+        if (!args[1]) {
             interaction.reply("Missing Opponent Name (should be second Parameter)")
             return;
         }
         //check if user is tagged
-        if(args[1].indexOf("@") > -1){
+        if (args[1].indexOf("@") > -1) {
             args[1] = args[1].substring(3, args[1].length);
             args[1] = args[1].substring(0, args[1].length - 1);
         }
 
 
         this.playerOne = "";
-        this.playerFields = {playerOne: [], playerTwo: []};
+        this.playerFields = { playerOne: [], playerTwo: [] };
         this.playerTwo = ""
         this.currentPlayer = null;
         this.loaded = false;
@@ -39,69 +39,69 @@ class FourWins {
         this.playerOne = interaction.author.username;
         this.playerTwo = args[1];
 
-        this.playerTwoObject = client.users.cache.find(user => {return (user.username == this.playerTwo || user.id === this.playerTwo )});
+        this.playerTwoObject = client.users.cache.find(user => { return (user.username == this.playerTwo || user.id === this.playerTwo) });
         this.playerTwo = this.playerTwoObject.username
         this.channel = null
-        const randomNumber = Math.floor(Math.random() * 2); 
+        const randomNumber = Math.floor(Math.random() * 2);
         this.currentPlayer = randomNumber === 1 ? this.playerOne : this.playerTwo;
-        
+
         this.init(false);
     }
 
-     async init(accepted){
+    async init(accepted) {
         const me = this;
         const promises = []
 
         let startMessage = null;
         let waitMessage = null;
-    
+
         this.channel = await this.client.channels.fetch(this.interaction.channelId);
-         if(accepted){
+        if (accepted) {
             startMessage = await this.channel.send(`${this.playerOne} started a 4wins game against ${this.playerTwo} \n ${playerOneIcon}: ${this.playerOne} \n ${playerTwoIcon}: ${this.playerTwo}`);
-    
+
             waitMessage = await this.channel.send(`creating please wait....`);
-    
+
             //leeres Feld erstellen
             this.msg = await this.channel.send(this.createField());
-            
-    
-            for(let n = 0; n < pressIcon.length; n++){
+
+
+            for (let n = 0; n < pressIcon.length; n++) {
                 const p = this.msg.react(pressIcon[n]);
-    
+
                 promises.push(p)
             }
-         }else{
+        } else {
             startMessage = await this.channel.send(`${this.playerOne} wants to play a 4win game against ${this.playerTwoObject}. Do you accept?`);
             startMessage.react(acceptIcon);
             startMessage.react(declineIcon);
-         }
+        }
 
-        
+
         this.reactionListener = async (reaction, user) => {
-            if(!accepted){
-                if((acceptIcon === reaction.emoji.name ||  declineIcon === reaction.emoji.name) && user.username === this.playerTwo){
-                    if(acceptIcon === reaction.emoji.name){
+            if (!accepted) {
+                if ((acceptIcon === reaction.emoji.name || declineIcon === reaction.emoji.name) && user.username === this.playerTwo) {
+                    if (acceptIcon === reaction.emoji.name) {
                         startMessage.delete();
                         me.client.removeListener("messageReactionAdd", me.reactionListener);
-                       this.init(true);
-                    }else{
+                        this.init(true);
+                    } else {
                         this.channel.send(`${this.playerTwo} did not accept the game`);
                         me.client.removeListener("messageReactionAdd", me.reactionListener);
                         startMessage.delete();
                     }
                 }
             }
-            else if(me.filter(reaction, user)){
+            else if (me.filter(reaction, user)) {
                 const columnIndex = pressIcon.indexOf(reaction.emoji.name);
-                const pointsInColumn = function(column){
+                const pointsInColumn = function (column) {
                     let usedSpace = 0;
-                    for(let i = 0; i < me.playerFields.playerOne.length; i++){
-                        if(me.playerFields.playerOne[i].col === column){
+                    for (let i = 0; i < me.playerFields.playerOne.length; i++) {
+                        if (me.playerFields.playerOne[i].col === column) {
                             usedSpace++;
                         }
                     }
-                    for(let j = 0; j < me.playerFields.playerTwo.length; j++){
-                        if(me.playerFields.playerTwo[j].col === column){
+                    for (let j = 0; j < me.playerFields.playerTwo.length; j++) {
+                        if (me.playerFields.playerTwo[j].col === column) {
                             usedSpace++;
                         }
                     }
@@ -110,34 +110,34 @@ class FourWins {
 
                 let player = ""
 
-                if(me.currentPlayer === me.playerOne){
-                    player = "playerOne"            
-                }else{
+                if (me.currentPlayer === me.playerOne) {
+                    player = "playerOne"
+                } else {
                     player = "playerTwo"
                 }
                 const usedRowSpaces = pointsInColumn(columnIndex);
 
-                if(usedRowSpaces < rows ){
-                    me.playerFields[player].push({col: columnIndex, row: (rows - usedRowSpaces) - 1})
+                if (usedRowSpaces < rows) {
+                    me.playerFields[player].push({ col: columnIndex, row: (rows - usedRowSpaces) - 1 })
 
                     const won = me.checkIfWon(me.playerFields[player])
 
-                    if(won){
+                    if (won) {
                         setTimeout(() => {
                             me.msg.delete();
                             startMessage.delete();
                             me.channel.send(`${me.currentPlayer} won the 4wins Game against ${player === "playerOne" ? me.playerTwo : me.playerOne}`)
                             me.client.removeListener("messageReactionAdd", me.reactionListener)
-                       }, 3000)
-                    }else{
-                        if(me.playerFields.playerOne.length + me.playerFields.playerTwo.length === (rows * columns)){
+                        }, 3000)
+                    } else {
+                        if (me.playerFields.playerOne.length + me.playerFields.playerTwo.length === (rows * columns)) {
                             me.msg.delete();
                             startMessage.delete();
                             me.channel.send(`Its a draw between ${me.currentPlayer} and ${player === "playerOne" ? me.playerTwo : me.playerOne}`)
-                        }else{
+                        } else {
                             me.msg = await me.msg.fetch();
                             me.msg.reactions.resolve(reaction.emoji.name).users.remove(me.interaction.author)
-                            if(me.playerTwoObject){
+                            if (me.playerTwoObject) {
                                 me.msg.reactions.resolve(reaction.emoji.name).users.remove(me.playerTwoObject)
                             }
                             //player wechseln
@@ -145,20 +145,20 @@ class FourWins {
                             me.msg.edit(me.updateField());
                         }
                     }
-                }else{
+                } else {
                     const invalidFields = [];
 
-                    for(let n = 0; n < rows; n++){
-                        invalidFields.push({col: columnIndex, row: n})
+                    for (let n = 0; n < rows; n++) {
+                        invalidFields.push({ col: columnIndex, row: n })
                     }
-                    me.msg.edit(me.updateField(invalidFields,true,false));
-                    me.msg = await me.msg.fetch();    
+                    me.msg.edit(me.updateField(invalidFields, true, false));
+                    me.msg = await me.msg.fetch();
                     me.msg.reactions.resolve(reaction.emoji.name).users.remove(me.interaction.author)
-                    if(me.playerTwoObject){
+                    if (me.playerTwoObject) {
                         me.msg.reactions.resolve(reaction.emoji.name).users.remove(me.playerTwoObject)
                     }
                     setTimeout(async () => {
-                        
+
                         me.msg.edit(me.updateField());
                     }, 700)
                 }
@@ -167,226 +167,226 @@ class FourWins {
 
         this.client.on('messageReactionAdd', this.reactionListener)
 
-        if(accepted){
+        if (accepted) {
             Promise.all(promises).then(() => {
                 this.loaded = true;
                 waitMessage.delete();
             })
         }
     }
-    checkIfWon(playerFields){
+    checkIfWon(playerFields) {
         let won = false;
         let sameRow = {};
         let sameColumn = {};
         let wonFields = [];
-    
-        if(playerFields.length > 3){
-            for(let i = 0; i < playerFields.length; i++){
+
+        if (playerFields.length > 3) {
+            for (let i = 0; i < playerFields.length; i++) {
                 let numberInOrder = [];
-                sameRow[playerFields[i].row] = sameRow[playerFields[i].row] ? sameRow[playerFields[i].row]  : {row: playerFields[i].row, col: []};
+                sameRow[playerFields[i].row] = sameRow[playerFields[i].row] ? sameRow[playerFields[i].row] : { row: playerFields[i].row, col: [] };
                 sameRow[playerFields[i].row].col.push(playerFields[i].col)
 
-                sameColumn[playerFields[i].col] = sameColumn[playerFields[i].col] ? sameColumn[playerFields[i].col]  : {col: playerFields[i].col, row: []};
+                sameColumn[playerFields[i].col] = sameColumn[playerFields[i].col] ? sameColumn[playerFields[i].col] : { col: playerFields[i].col, row: [] };
                 sameColumn[playerFields[i].col].row.push(playerFields[i].row)
 
 
                 //diagonal 
-                for(let j = 0; j < 4;j++){
+                for (let j = 0; j < 4; j++) {
                     //runter rechts
                     const row = playerFields[i].row
                     const col = playerFields[i].col
 
-                    if(row < 3 && col < 4){
-                        const fieldSet = this.fieldUsed({row: row + j, col: col+j}, this.currentPlayer)
-                        if(fieldSet && fieldSet.icon){
-                            numberInOrder.push({row: row + j, col: col+j});
+                    if (row < 3 && col < 4) {
+                        const fieldSet = this.fieldUsed({ row: row + j, col: col + j }, this.currentPlayer)
+                        if (fieldSet && fieldSet.icon) {
+                            numberInOrder.push({ row: row + j, col: col + j });
 
-                            if(numberInOrder.length === 4){
+                            if (numberInOrder.length === 4) {
                                 wonFields = numberInOrder;
                             }
-                        }else{
+                        } else {
                             numberInOrder = [];
                         }
                     }
                 }
 
-                for(let j = 0; j < 4;j++){
+                for (let j = 0; j < 4; j++) {
                     //hoch links
                     const row = playerFields[i].row
                     const col = playerFields[i].col
 
-                    if(row > 2 && col > 2){
-                        const fieldSet = this.fieldUsed({row: row - j, col: col-j}, this.currentPlayer)
-                        if(fieldSet && fieldSet.icon){
-                            numberInOrder.push({row: row - j, col: col-j});
+                    if (row > 2 && col > 2) {
+                        const fieldSet = this.fieldUsed({ row: row - j, col: col - j }, this.currentPlayer)
+                        if (fieldSet && fieldSet.icon) {
+                            numberInOrder.push({ row: row - j, col: col - j });
 
-                            if(numberInOrder.length === 4){
+                            if (numberInOrder.length === 4) {
                                 wonFields = numberInOrder;
                             }
-                        }else{
+                        } else {
                             numberInOrder = [];
                         }
                     }
                 }
 
-                for(let j = 0; j < 4;j++){
+                for (let j = 0; j < 4; j++) {
                     //hoch rechts
                     const row = playerFields[i].row
                     const col = playerFields[i].col
 
-                    if(row > 2 && col < 4){
-                        const fieldSet = this.fieldUsed({row: row - j, col: col + j}, this.currentPlayer)
-                        if(fieldSet && fieldSet.icon){
-                            numberInOrder.push({row: row - j, col: col + j});
+                    if (row > 2 && col < 4) {
+                        const fieldSet = this.fieldUsed({ row: row - j, col: col + j }, this.currentPlayer)
+                        if (fieldSet && fieldSet.icon) {
+                            numberInOrder.push({ row: row - j, col: col + j });
 
-                            if(numberInOrder.length === 4){
+                            if (numberInOrder.length === 4) {
                                 wonFields = numberInOrder;
                             }
-                        }else{
+                        } else {
                             numberInOrder = [];
                         }
                     }
-                   
+
                 }
 
-                for(let j = 0; j < 4;j++){
+                for (let j = 0; j < 4; j++) {
                     //runter links
                     const row = playerFields[i].row
                     const col = playerFields[i].col
 
-                    if(row < 3 && col > 2){
-                        const fieldSet = this.fieldUsed({row: row + j, col: col - j}, this.currentPlayer)
-                        if(fieldSet && fieldSet.icon){
-                            numberInOrder.push({row: row + j, col: col - j});
+                    if (row < 3 && col > 2) {
+                        const fieldSet = this.fieldUsed({ row: row + j, col: col - j }, this.currentPlayer)
+                        if (fieldSet && fieldSet.icon) {
+                            numberInOrder.push({ row: row + j, col: col - j });
 
-                            if(numberInOrder.length === 4){
+                            if (numberInOrder.length === 4) {
                                 wonFields = numberInOrder;
                             }
-                        }else{
+                        } else {
                             numberInOrder = [];
                         }
-                    }                  
+                    }
                 }
             }
-        
+
             Object.keys(sameRow).forEach(element => {
                 element = sameRow[element]
-                if(element.col.length > 3){
+                if (element.col.length > 3) {
                     let numberInOrder = [];
                     element.col = element.col.sort();
                     element.col.forEach((col, index) => {
-                        if(((index + 1) < element.col.length && element.col[index + 1] === col + 1) || numberInOrder.length === 3){
-                            numberInOrder.push({col, row: element.row});
-                            if(numberInOrder.length === 4){
+                        if (((index + 1) < element.col.length && element.col[index + 1] === col + 1) || numberInOrder.length === 3) {
+                            numberInOrder.push({ col, row: element.row });
+                            if (numberInOrder.length === 4) {
                                 wonFields = numberInOrder;
                             }
-                        }else{
+                        } else {
                             numberInOrder = [];
                         }
                     })
                 }
             });
-            
+
             Object.keys(sameColumn).forEach(element => {
                 element = sameColumn[element]
-                if(element.row.length > 3){
+                if (element.row.length > 3) {
                     let numberInOrder = [];
                     element.row = element.row.sort();
                     element.row.forEach((row, index) => {
-                        if(((index + 1) < element.row.length && element.row[index + 1] === row + 1) || numberInOrder.length === 3){
-                            numberInOrder.push({row, col: element.col});
-                            if(numberInOrder.length === 4){
+                        if (((index + 1) < element.row.length && element.row[index + 1] === row + 1) || numberInOrder.length === 3) {
+                            numberInOrder.push({ row, col: element.col });
+                            if (numberInOrder.length === 4) {
                                 wonFields = numberInOrder;
                             }
-                        }else{
+                        } else {
                             numberInOrder = [];
                         }
                     })
                 }
             });
-            
-            if(wonFields.length > 0){
+
+            if (wonFields.length > 0) {
                 console.log("won");
                 won = true;
 
-                this.msg.edit(this.updateField(wonFields,false,true));
+                this.msg.edit(this.updateField(wonFields, false, true));
             }
         }
 
         return won;
     }
-    fieldUsed(field, player){
+    fieldUsed(field, player) {
         const obj = {};
-        if(player){
-            if(player === this.playerOne){
+        if (player) {
+            if (player === this.playerOne) {
                 //nur auf den ersten Spieler testen
                 this.playerFields.playerOne.forEach((f) => {
-                    if(f.col === field.col && f.row === field.row){
+                    if (f.col === field.col && f.row === field.row) {
                         obj.icon = playerOneIcon;
                     }
                 })
-            }else{
-                if(!obj.icon){
-                     //nur auf den zweiten Spieler testen
+            } else {
+                if (!obj.icon) {
+                    //nur auf den zweiten Spieler testen
                     this.playerFields.playerTwo.forEach((f) => {
-                        if(f.col === field.col && f.row === field.row){
+                        if (f.col === field.col && f.row === field.row) {
                             obj.icon = playerTwoIcon;
                         }
                     })
-                } 
+                }
             }
-        }else{
+        } else {
             this.playerFields.playerOne.forEach((f) => {
-                if(f.col === field.col && f.row === field.row){
+                if (f.col === field.col && f.row === field.row) {
                     obj.icon = playerOneIcon;
                 }
             })
-            
-            if(!obj.icon){
+
+            if (!obj.icon) {
                 this.playerFields.playerTwo.forEach((f) => {
-                    if(f.col === field.col && f.row === field.row){
+                    if (f.col === field.col && f.row === field.row) {
                         obj.icon = playerTwoIcon;
                     }
                 })
             }
         }
-           
-    
+
+
         return obj;
     }
-    updateField(markedFields, invalid, win){
+    updateField(markedFields, invalid, win) {
         let text = `${this.currentPlayer}'s turn \n`;
-        for(let i = 0; i < rows; i++){
-            for(let j = 0; j < columns; j++){
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
                 let found = false;
-                if(markedFields && markedFields.length > 0){
+                if (markedFields && markedFields.length > 0) {
                     markedFields.forEach(field => {
-                        if(field.col === j && field.row === i){
+                        if (field.col === j && field.row === i) {
                             found = true;
                         }
                     });
                 }
-                if(found && (invalid || win)){
+                if (found && (invalid || win)) {
                     text += (invalid ? invalidIcon : winIcon) + "        ";
-                }else{
-                    const fieldSet = this.fieldUsed({col:j, row: i});
-                    text +=  (fieldSet && fieldSet.icon ? fieldSet.icon : emptyIcon) + "        ";
+                } else {
+                    const fieldSet = this.fieldUsed({ col: j, row: i });
+                    text += (fieldSet && fieldSet.icon ? fieldSet.icon : emptyIcon) + "        ";
                 }
             }
             text += `\n \n`;
         }
-    
+
         return text;
     }
-    createField(){
+    createField() {
         let text = `${this.currentPlayer}'s turn \n`
-        for(let i = 0; i < rows; i++){
-            for(let j = 0; j < columns; j++){
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
                 text += emptyIcon + "        ";
             }
             text += "\n \n";
         }
-    
+
         return text;
     }
     filter(reaction, user) {
@@ -395,7 +395,7 @@ class FourWins {
 }
 
 
-function fourwins(interaction, args, client){
+function fourwins(interaction, args, client) {
     new FourWins(interaction, args, client);
 }
 
