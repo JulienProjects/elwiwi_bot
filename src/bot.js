@@ -39,7 +39,7 @@ client.on("message", (msg) => {
     if (msg.author.bot) {
         return;
     }
-    //console.log(msg);
+
     let messageString = msg.content.trim();
     while (messageString.indexOf(elwiwiCode) > -1 || messageString.indexOf(elwiwiRightCode) > -1) {
         if (messageString.indexOf(elwiwiCode) > -1) {
